@@ -16,6 +16,7 @@ class MatchUser(models.query.QuerySet):
 		return (q1 | q2).distinct()
 
 
+
 class MatchesManager(models.Manager):
 
 	def get_queryset(self):
@@ -75,6 +76,20 @@ class MatchesManager(models.Manager):
 				pass
 		return matches
 
+	def get_queryset_with_non_zero_match_percent(self,user):
+		matches = []
+		match_set = self.matches_all(user).filter(match_percent__gt=0.00).order_by('-match_percent')
+		for match in match_set:
+			if match.user_a == user:
+				items_wanted = [match.user_b, match.get_percent]
+				matches.append(items_wanted)
+			elif match.user_b == user:
+				items_wanted = [match.user_a, match.get_percent]
+				matches.append(items_wanted)
+			else:
+				pass
+		return matches
+
 
 
 class Matches(models.Model):
@@ -118,7 +133,7 @@ class Matches(models.Model):
 
 class PostionMatchManager(models.Manager):
 	def update_matches(self,user ,match_no):
-		matches = Matches.objects.get_queryset_with_percent(user = user)[:10]
+		matches = Matches.objects.get_queryset_with_non_zero_match_percent(user = user)[:10]
 		for match in matches:
 			userjob = match[0].userjob_set.all()
 			if userjob.count() > 0:

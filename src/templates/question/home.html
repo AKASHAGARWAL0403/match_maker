@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+
+<style>
+{% block style %}
+@media(min-width: 768px){
+	.img-featured-match
+	{
+		min-width: 90px;
+		min-height: 90px;
+	}
+}
+
+{% endblock %}
+</style>
+
+{% block content %}
+	<div class='row'>
+		<div class='col-sm-8'>
+			<h1>Dashboard</h1>
+		</div>
+		<div class='col-sm-4'>
+			<div class='col-sm-12'>
+				<h3>Matches</h3>
+				<hr/>
+			</div>
+			{% for match_user, percent in  matches %}
+				<div class='col-sm-4 text-center'>
+					<a href='{{ match_user.profile.get_absolute_url }}'>
+						{{ match_user }}
+					</a>
+					<a href='{{ match_user.profile.get_absolute_url }}'>
+						{% if match_user.profile.picture %}
+						<img src='{{ match_user.profile.picture.url }}' class='img-responsive center-block img-featured-match' />
+						 {% else %}
+						<img src='{% static "img/default.jpg" %}' class='img-responsive center-block img-featured-match' />
+						{% endif %}
+					</a>
+					{{ percent }}
+				</div>
+			{% endfor %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8"></div>
+		<div class="col-sm-4">
+		<h2>Suggested Job</h2>
+		{% for position in  positions %}
+				<div class='col-sm-4 text-center'>
+					<a href='{{ position.get_match_url }}'>
+						<h3>{{ position.job.text }}</h3>
+					</a>
+				</div>
+		{% endfor %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8"></div>
+		<div class="col-sm-4">
+		<h2>Suggested Location</h2>
+		{% for location in  locations %}
+				<div class='col-sm-4 text-center'>
+					<a href='{{ location.get_match_url }}'>
+						<h3>{{ location.location.name }}</h3>
+					</a>
+				</div>
+		{% endfor %}
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-sm-8"></div>
+		<div class="col-sm-4">
+		<h2>Suggested Employer</h2>
+		{% for employer in  employers %}
+				<div class='col-sm-4 text-center'>
+					<a href='{{ employer.get_match_url }}'>
+						<h3>{{ employer.employer.name }}</h3>
+					</a>
+				</div>
+		{% endfor %}
+		</div>
+	</div>
+{% endblock %}

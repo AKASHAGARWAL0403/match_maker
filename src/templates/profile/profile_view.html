@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+
+{% block content %}
+
+	<h3>{{ profile.user }}</h3>
+	<p class='lead'>Match: {{ match.get_percent }} </p>
+
+	{% if profile.picture %}
+		<img src='{{ profile.picture.url }}' class='img-responsive center-block img-featured-match' />
+	{% else %}
+		<img src='{% static "img/default.jpg" %}' class='img-responsive center-block img-featured-match' />
+	{% endif %}	
+
+	<div>
+		<ul>
+			{% for job in jobs %}
+				<li>{{ job.position }} at {{ job.employer_name }} in {{ job.location }}
+			{% endfor %}
+	</div>
+
+{% endblock %}

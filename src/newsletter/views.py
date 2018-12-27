@@ -34,9 +34,12 @@ def home(request):
 		}
 
 	if request.user.is_authenticated:
-		matches = Matches.objects.get_queryset_with_percent(request.user)[:6]
 		for u in User.objects.exclude(username=request.user):
 			Matches.objects.get_or_create_match(user_a=request.user,user_b=u)
+		matches = Matches.objects.get_queryset_with_percent(request.user)[:6]
+		if matches:
+			if matches[0][1] == "0.00%":
+				matches = []
 		#PositionMatch.objects.update_matches(request.user,20)
 		position = PositionMatch.objects.filter(user = request.user)[:6]
 		employer = EmployerMatch.objects.filter(user = request.user)[:6]

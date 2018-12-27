@@ -4,7 +4,7 @@ from .models import (PositionMatch , LocationMatch , EmployerMatch  , Matches)
 from django.contrib.auth.signals import user_logged_in
 from django.dispatch import receiver
 from django.contrib.auth import get_user_model 
-
+from profiles.models import Profile
 
 
 User = get_user_model()
@@ -13,6 +13,7 @@ User = get_user_model()
 def get_user_match_reciever(sender,request,user,*args,**kwargs):
 	for u in User.objects.exclude(username=user):
 		Matches.objects.get_or_create_match(user_a=user,user_b=u)
+	Profile.objects.get_or_create(user=user)
 
 def position_match_view(request,slug):
 	try:

@@ -18,5 +18,13 @@
 				<li>{{ job.position }} at {{ job.employer_name }} in {{ job.location }}
 			{% endfor %}
 	</div>
+	{% if mutual_like %}
+		<h2>You are connected</h2>
+		<span>{{ profile.user.email }}</span>
+	{% endif %}
+	<a href='{{ profile.get_like_url }}'>
+		{% if i_like %}Unlike{% else %}Like{% endif %}
+	</a>
+	
 
 {% endblock %}

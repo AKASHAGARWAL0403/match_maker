@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 from .forms import UserJobForm
 from .models import UserJob
 from django.forms import modelformset_factory
+from likes.models import UserLike
 # Create your views here.
 
 User = get_user_model()
@@ -15,11 +16,18 @@ def profile_view(request,username):
 	user = get_object_or_404(User,username=username)
 	profile,created = Profile.objects.get_or_create(user=user)
 	user_job = user.userjob_set.all()
+	user_like  =  UserLike.objects.get_or_create(user=request.user)
+	i_like = False
+	if user in user_like[0].liked_user.all():
+		i_like = True
+	mutual_like = user_like[0].get_mutual_like(user)
 	match,created = Matches.objects.get_or_create_match(user_a=request.user,user_b=user)
 	context = {
 		"profile" : profile,
 		"match" : match,
-		"jobs" : user_job
+		"jobs" : user_job,
+		"mutual_like" : mutual_like,
+		"i_like" : i_like
 	}
 	return render(request,"profile/profile_view.html",context)
 

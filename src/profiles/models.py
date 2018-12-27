@@ -30,6 +30,9 @@ class Profile(models.Model):
 	def get_absolute_url(self):
 		return reverse("profile",kwargs={"username":self.user.username})
 
+	def get_like_url(self):
+		return reverse("like_unlike",kwargs={"id":self.user.id})
+
 
 class UserJob(models.Model):
 	user = models.ForeignKey(User,on_delete=models.CASCADE)
@@ -42,7 +45,7 @@ def post_save_user_job(sender,instance,created,*args,**kwargs):
 	job = instance.position.lower()
 	location = instance.location.lower()
 	name = instance.employer_name.lower()
-																			
+
 	new_job = Job.objects.get_or_create(text = job)
 	new_location , created = Location.objects.get_or_create(name=location)
 	employer_name = Employer.objects.get_or_create(name=name,location=new_location)

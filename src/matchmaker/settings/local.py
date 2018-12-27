@@ -62,6 +62,7 @@ INSTALLED_APPS = (
     'questions',
     'profiles',
     'jobs',
+    'likes',
 )
 
 

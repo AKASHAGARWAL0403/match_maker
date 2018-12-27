@@ -104,21 +104,21 @@ class Matches(models.Model):
 		match_percent,ques = get_match(user_a,user_b)
 		self.match_percent = match_percent
 		self.total_ques = ques
+		PositionMatch.objects.update_matches(self.user_a,10)
+		PositionMatch.objects.update_matches(self.user_b,10)
 		self.save()
 
 
 	def check_update(self):
 		offset = timezone.now() - datetime.timedelta(hours=12)
-		if self.updated < offset or self.match_percent == 0:
+		if self.updated < offset or self.match_percent == 0.0:
 			self.do_match()
-			PositionMatch.objects.update_matches(self.user_a,10)
-			PositionMatch.objects.update_matches(self.user_b,10)
 		else:
 			print("Already Updated")
 
 class PostionMatchManager(models.Manager):
 	def update_matches(self,user ,match_no):
-		matches = Matches.objects.get_queryset_with_percent(user = user)
+		matches = Matches.objects.get_queryset_with_percent(user = user)[:10]
 		for match in matches:
 			userjob = match[0].userjob_set.all()
 			if userjob.count() > 0:
@@ -165,7 +165,7 @@ class PositionMatch(models.Model):
 
 	@property
 	def get_match_url(self):
-		return reverse("position_match" , kwargs={"slug" : self.job.slug})
+		return reverse("position_match" , kwargs={"slug" :self.job.slug})
 
 class LocationMatch(models.Model):
 	user = 	models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.CASCADE)

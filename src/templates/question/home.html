@@ -45,7 +45,9 @@
 	<div class="row">
 		<div class="col-sm-8"></div>
 		<div class="col-sm-4">
-		<h2>Suggested Job</h2>
+		<div class="col-sm-12">
+			<h2>Suggested Job</h2>
+		</div>
 		{% for position in  positions %}
 				<div class='col-sm-4 text-center'>
 					<a href='{{ position.get_match_url }}'>
@@ -58,7 +60,9 @@
 	<div class="row">
 		<div class="col-sm-8"></div>
 		<div class="col-sm-4">
-		<h2>Suggested Location</h2>
+		<div class="col-sm-12">
+			<h2>Suggested Location</h2>
+		</div>
 		{% for location in  locations %}
 				<div class='col-sm-4 text-center'>
 					<a href='{{ location.get_match_url }}'>
@@ -71,7 +75,9 @@
 	<div class="row">
 		<div class="col-sm-8"></div>
 		<div class="col-sm-4">
-		<h2>Suggested Employer</h2>
+		<div class="col-sm-12">
+			<h2>Suggested Employer</h2>
+		</div>
 		{% for employer in  employers %}
 				<div class='col-sm-4 text-center'>
 					<a href='{{ employer.get_match_url }}'>

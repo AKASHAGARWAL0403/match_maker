@@ -7,6 +7,9 @@ from .models import SignUp
 from matches.models import ( Matches , LocationMatch , PositionMatch , EmployerMatch )
 from questions.models import Question
 from jobs.models import ( Job , Employer , Location)
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 # Create your views here.
 def home(request):
@@ -30,12 +33,14 @@ def home(request):
 			"title": "Thank you"
 		}
 
-	if request.user.is_authenticated and request.user.is_staff:
+	if request.user.is_authenticated:
 		matches = Matches.objects.get_queryset_with_percent(request.user)[:10]
-		PositionMatch.objects.update_matches(request.user,20)
-		position = PositionMatch.objects.filter(user = request.user)
-		employer = EmployerMatch.objects.filter(user = request.user)
-		location = LocationMatch.objects.filter(user = request.user)
+		for u in User.objects.exclude(username=request.user):
+			Matches.objects.get_or_create_match(user_a=request.user,user_b=u)
+		#PositionMatch.objects.update_matches(request.user,20)
+		position = PositionMatch.objects.filter(user = request.user)[:6]
+		employer = EmployerMatch.objects.filter(user = request.user)[:6]
+		location = LocationMatch.objects.filter(user = request.user)[:6]
 		queryset = Question.objects.all().order_by('-timestamp') 
 		print(location , employer , position)
 		context = {

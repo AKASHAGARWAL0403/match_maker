@@ -1,15 +1,48 @@
-from django.shortcuts import render , get_object_or_404
+from django.shortcuts import render , get_object_or_404 , redirect
 from .models import Profile
 from matches.models import Matches
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import get_user_model
-from .forms import UserJobForm
+from .forms import ( UserJobForm , UserForm )
 from .models import UserJob
 from django.forms import modelformset_factory
+from django.contrib import messages
 from likes.models import UserLike
 # Create your views here.
 
 User = get_user_model()
+
+
+@login_required
+def profile(request):
+	user = get_object_or_404(User,username=request.user.username)
+	profile,created = Profile.objects.get_or_create(user=request.user)
+	user_job = user.userjob_set.all()
+	context = {
+		"profile" : profile,
+		"jobs" : user_job,
+	}
+	return render(request,"profile/user_profile.html",context)
+
+
+
+@login_required
+def profile_edit(request):
+	title = "UPDATE PROFILE"
+	profile,created = Profile.objects.get_or_create(user=request.user)
+	form = UserForm(request.POST or None , request.FILES or None , instance=profile )
+	context = {
+		"form" : form,
+		"title" : title
+	}
+
+	if form.is_valid():
+		instance = form.save(commit=False)
+		instance.user = request.user
+		instance.save()
+		messages.success(request,"Your Profile was updated")
+
+	return render(request,"forms.html",context)
 
 @login_required
 def profile_view(request,username):
@@ -63,5 +96,7 @@ def job_edit(request):
 		for instance in instances:
 			instance.user = request.user
 			instance.save()
+		print("rgdsdfcecsgrdfsd")
+		return redirect("user_profile")
 
 	return render(request,"job/update.html",context)

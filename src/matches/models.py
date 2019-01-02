@@ -6,6 +6,7 @@ from django.conf import settings
 from .utils import get_match
 from django.urls import reverse
 from jobs.models import ( Job , Location , Employer)
+from .signal import user_matches_update
 # Create your models here.
 
 
@@ -58,6 +59,12 @@ class MatchesManager(models.Manager):
 		if queryset.count > 0:
 			for i in queryset:
 				i.check_update()
+
+	def update_for_user(self,user):
+		qs = self.get_queryset().matches(user)
+		for ins in qs:
+			ins.do_match()
+		return True
 
 	def matches_all(self,user):
 		return self.get_queryset().matches(user)
@@ -130,6 +137,11 @@ class Matches(models.Model):
 			self.do_match()
 		else:
 			print("Already Updated")
+
+def user_matches_update_receiver(sender, user, *args, **kwargs):
+	updated = Matches.objects.update_for_user(user)
+
+user_matches_update.connect(user_matches_update_receiver)
 
 class PostionMatchManager(models.Manager):
 	def update_matches(self,user ,match_no):

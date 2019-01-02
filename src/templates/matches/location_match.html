@@ -1,6 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 
-{{ instance }}
-{{ matches }}
+<h1>{{ instance }}</h1>
+<ul>
+{% for match in matches %}
+	<li><a href="{{match.user.profile.get_absolute_url}}">{{match.user.username}}</a></li>
+{% endfor %}
+</ul>
 {% endblock %}

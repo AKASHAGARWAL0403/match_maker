@@ -18,6 +18,14 @@
 {% block content %}
 	<div class='row'>
 		<div class='col-sm-8'>
+			{% if queryset_instance %}
+				{% include 'question/question_form.html' with instance=queryset_instance form=question_form %}
+			{% else %}
+				<p class="lead">You have answered all questions</p>
+			{% endif %}
+			{% if new_user %}
+				<p>Answer Question to get matches</p>
+			{% else %}
 			<h1>Dashboard</h1>
 			<div class='col-sm-12'>
 				<h3>Mutual Matches</h3>
@@ -37,6 +45,7 @@
 					</a>
 				</div>
 			{% endfor %}
+			{% endif %}
 		</div>
 		<div class='col-sm-4'>
 			<div class='col-sm-12'>

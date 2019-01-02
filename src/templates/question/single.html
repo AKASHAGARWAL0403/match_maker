@@ -2,27 +2,7 @@
 
 {% block content %}
 
-<form method='POST' action='' >{% csrf_token %}
-	<h1>{{ instance.text }}</h1>
-	<input type="hidden" name="question_id" value="{{ instance.id }}">
-	{% for ans in instance.answer_set.all %}
-		<input type="radio" name="answer_id" {% if new_user.my_answer.id == ans.id %}checked{% endif %}  value='{{ ans.id }}'>{{ ans.text }}<br/>
-	{% endfor %}
-	<br/>
-	<label>IMPORTANCE: </label>{{ form.importance_level }}<br/>
-
-	<h1>Friend's Answer</h1>
-	<input type="hidden" name="question_id" value="{{ instance.id }}">
-	{% for ans in instance.answer_set.all %}
-		<input type="radio" name="there_answer_id" {% if new_user.there_answer.id == ans.id %}checked{% endif %} value='{{ ans.id }}'>{{ ans.text }}<br/>
-	{% endfor %}
-		<input type="radio" name="there_answer_id" {% if not new_user.there_answer.id %}checked{% endif %} value="-1">Holds No importance<br/>
-	<br/>
-	<label>IMPORTANCE: </label>{{ form.there_importance_level }}<br/>
-	<input type="submit" value="Submit">
-
-
-</form>
+{% include 'question/question_form.html' with instance=instance form=form %}
 
 
 

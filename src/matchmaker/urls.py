@@ -7,7 +7,7 @@ from django.contrib import admin
 from newsletter.views import ( contact )
 from matchmaker.views import about
 from questions import views
-from profiles.views import ( profile_view , job_create , job_edit )
+from profiles.views import ( profile_view , job_create , job_edit , profile , profile_edit )
 from likes.views import like_unlike_view
 from dashboard.views import home
 urlpatterns = [
@@ -19,6 +19,8 @@ urlpatterns = [
     url(r'^question/(?P<id>\d+)/$', views.single,name='question_single'),
     url(r'^admin/', admin.site.urls),
     url(r'^accounts/', include('registration.backends.default.urls')),
+    url(r'^profile/$', profile , name='user_profile'),
+    url(r'^profile/edit/$', profile_edit , name='edit_profile'),
     url(r'^profile/(?P<username>[\w.@+-]+)/$', profile_view , name='profile'),
     url(r'^jobs/add/$',job_create,name='job_add'),
     url(r'^jobs/edit/$',job_edit,name='job_edit'),
